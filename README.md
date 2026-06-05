@@ -105,8 +105,38 @@ rem/
 ├── serve-static.js                # Node.js static file server
 ├── start.bat                      # Launch both servers
 ├── start_backend.bat              # Launch backend only
+├── render.yaml                    # Render blueprint deployment
 └── README.md
 ```
+
+## Deploy to Render (Both Backend & Frontend — Free)
+
+Both services deploy together from the same repo using the included `render.yaml` blueprint.
+
+### One-click deploy
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Taniiishk/Resume-Optimization-)
+
+### Manual steps
+
+1. Push the repo to GitHub
+2. Go to [Render Dashboard](https://dashboard.render.com/) → **Blueprints** → **New Blueprint**
+3. Connect your GitHub repo — Render reads `render.yaml` and creates both services:
+
+   | Service | Type | Start Command |
+   |---------|------|--------------|
+   | `ats-resume-backend` | Web Service | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+   | `ats-resume-frontend` | Static Site | Builds with `npm install && npm run build` |
+
+4. Go to your **backend** → **Environment** → add your API key:
+
+   | Variable | Value |
+   |----------|-------|
+   | `GEMINI_API_KEY` | (or `OPENROUTER_API_KEY`) from `.env.example` |
+
+5. The backend URL (e.g. `https://ats-resume-backend.onrender.com`) is automatically injected into the frontend as `NEXT_PUBLIC_API_URL` — no manual setup needed.
+
+6. Both services deploy and your site is live.
 
 ## Usage
 

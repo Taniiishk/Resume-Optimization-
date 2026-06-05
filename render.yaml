@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: ats-resume-backend
+    runtime: python
+    repo: https://github.com/Taniiishk/Resume-Optimization-
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    autoDeploy: true
+
+  - type: static
+    name: ats-resume-frontend
+    runtime: static
+    repo: https://github.com/Taniiishk/Resume-Optimization-
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: out
+    rootDir: frontend
+    autoDeploy: true
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          name: ats-resume-backend
+          type: web
+          property: host
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
