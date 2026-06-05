@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
-    "postbuild": "node -e \"require('fs').copyFileSync('public/_redirects','out/_redirects')\"",
     "start": "next start --port 3000"
   },
   "dependencies": {

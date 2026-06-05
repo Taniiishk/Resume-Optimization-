@@ -108,45 +108,6 @@ rem/
 └── README.md
 ```
 
-## Deploy to Cloudflare Pages
-
-The frontend is a static Next.js export and works perfectly on Cloudflare Pages.
-
-### Steps
-
-1. Push the repo to GitHub
-2. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-3. Select your repo and configure:
-
-   | Setting | Value |
-   |---------|-------|
-   | Build command | `cd frontend && npm install && npm run build` |
-   | Build output directory | `frontend/out/` |
-   | Root directory | (leave blank — use repo root) |
-
-4. Add environment variables (Production):
-
-   | Variable | Value |
-   |----------|-------|
-   | `NEXT_PUBLIC_API_URL` | URL of your deployed backend (see below) |
-
-5. Click **Save and Deploy**
-
-### Backend
-
-The Python/FastAPI backend **cannot** run on Cloudflare Pages. Deploy it on:
-
-- [Railway](https://railway.app/) — `railway up` from `backend/`
-- [Render](https://render.com/) — Web Service, start command: `uvicorn app.main:app --host 0.0.0.0 --port 10000`
-- [Fly.io](https://fly.io/) — `fly launch` from `backend/`
-- Any VPS with Docker or directly via uvicorn
-
-Deploy the backend first, then set `NEXT_PUBLIC_API_URL` to its URL.
-
-### SPA Routing
-
-A `_redirects` file in `frontend/public/` ensures all routes serve `index.html` for client-side navigation. This is copied to the build output automatically.
-
 ## Usage
 
 1. Open `http://localhost:3000`
