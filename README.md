@@ -113,30 +113,26 @@ rem/
 
 Both services deploy together from the same repo using the included `render.yaml` blueprint.
 
-### One-click deploy
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Taniiishk/Resume-Optimization-)
-
-### Manual steps
+### Steps
 
 1. Push the repo to GitHub
-2. Go to [Render Dashboard](https://dashboard.render.com/) → **Blueprints** → **New Blueprint**
-3. Connect your GitHub repo — Render reads `render.yaml` and creates both services:
+2. **Backend**: Go to [Render Dashboard](https://dashboard.render.com/) → **New** → **Blueprint** → connect repo — `render.yaml` auto-creates the backend web service
+3. **Frontend**: Go to **New** → **Static Site** → connect repo:
 
-   | Service | Type | Start Command |
-   |---------|------|--------------|
-   | `ats-resume-backend` | Web Service | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
-   | `ats-resume-frontend` | Static Site | Builds with `npm install && npm run build` |
+   | Setting | Value |
+   |---------|-------|
+   | Root directory | `frontend` |
+   | Build command | `npm install && npm run build` |
+   | Publish directory | `out` |
 
-4. Go to your **backend** → **Environment** → add your API key:
+4. **Add env vars** in both services:
 
-   | Variable | Value |
-   |----------|-------|
-   | `GEMINI_API_KEY` | (or `OPENROUTER_API_KEY`) from `.env.example` |
+   | Service | Variable | Value |
+   |---------|----------|-------|
+   | Backend | `GEMINI_API_KEY` | your key from `.env.example` |
+   | Frontend | `NEXT_PUBLIC_API_URL` | `https://ats-resume-backend.onrender.com` |
 
-5. The backend URL (e.g. `https://ats-resume-backend.onrender.com`) is automatically injected into the frontend as `NEXT_PUBLIC_API_URL` — no manual setup needed.
-
-6. Both services deploy and your site is live.
+5. Both deploy and your site is live.
 
 ## Usage
 
