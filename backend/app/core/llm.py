@@ -38,7 +38,7 @@ def _get_client() -> OpenAI:
                 "No API key found. Set OPENROUTER_API_KEY in backend/.env"
             )
         _client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
+            base_url=settings.openrouter_base_url,
             api_key=key,
             default_headers={
                 "HTTP-Referer": "http://localhost:3000",
