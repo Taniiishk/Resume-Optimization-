@@ -100,6 +100,7 @@ def _call_with_retry(
             text = (response.choices[0].message.content or "").strip()
             if text:
                 return text
+            logger.warning("LLM returned empty content for model=%s attempt=%d kwargs=%s", model, attempt, kwargs)
         except Exception as e:
             last_error = e
             if _is_retryable(e):
@@ -136,6 +137,7 @@ def generate_json(
     messages = _build_messages(prompt, system)
     text = _call_with_retry(messages, temperature, json_mode=True)
 
+    logger.info("LLM raw response (first 500 chars): %s", text[:500])
     return _parse_json_from_text(text, prompt, system, temperature)
 
 
