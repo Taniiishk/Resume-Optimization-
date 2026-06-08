@@ -1,6 +1,4 @@
-"""LLM client using OpenRouter (OpenAI-compatible API).
-
-Supports free-tier OpenRouter models with automatic fallback.
+"""LLM client for OpenAI-compatible APIs (OpenRouter, Bluesminds, etc.).
 """
 
 from __future__ import annotations
@@ -68,9 +66,11 @@ def _call_with_retry(
     client = _get_client()
 
     models_to_try = [settings.model_name]
-    for m in _FALLBACK_MODELS:
-        if m not in models_to_try:
-            models_to_try.append(m)
+    # Only use fallback models with default OpenRouter URL
+    if settings.openrouter_base_url == "https://openrouter.ai/api/v1":
+        for m in _FALLBACK_MODELS:
+            if m not in models_to_try:
+                models_to_try.append(m)
 
     # Two formats to try: with response_format (json) and without (prompt-based)
     formats: list[dict | None] = [{"type": "json_object"}] if json_mode else [None]
@@ -105,13 +105,13 @@ def _call_with_retry(
             if _is_retryable(e):
                 delay = 5 + (attempt * 10)
                 logger.warning(
-                    "OpenRouter retryable error on model=%s attempt=%d — retrying in %ds: %s",
+                    "LLM retryable error on model=%s attempt=%d — retrying in %ds: %s",
                     model, attempt, delay, e,
                 )
                 time.sleep(delay)
                 continue
             # Non-retryable (400 bad request, etc.) — try next format/model
-            logger.warning("OpenRouter non-retryable error on model=%s: %s", model, e)
+            logger.warning("LLM non-retryable error on model=%s: %s", model, e)
             continue
 
     raise RuntimeError(
